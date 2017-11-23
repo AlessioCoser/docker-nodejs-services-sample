@@ -1,14 +1,16 @@
-var queueName = 'tasks'
-var queueConnection = require('amqplib').connect('amqp://queue')
+const amqp = require('amqplib')
 
-queueConnection
-.then((connection) => {
-  return connection.createChannel()
-  .then(function (channel) {
-    return channel.assertQueue(queueName)
-    .then((ok) => channel.sendToQueue(queueName, Buffer.from('something to do')))
-    .then(() => channel.close())
-  })
-  .finally(function () { connection.close() })
-})
-.catch(console.warn)
+async function producer (queueName, connectionString) {
+  var connection = await amqp.connect(connectionString)
+  var channel = await connection.createChannel()
+  var ok = await channel.assertQueue(queueName)
+
+  if (ok) {
+    await channel.sendToQueue(queueName, Buffer.from('something to do'))
+  }
+
+  await channel.close()
+  await connection.close()
+}
+
+producer('tasks', 'amqp://queue')
