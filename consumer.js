@@ -1,16 +1,20 @@
-var queueName = 'tasks'
-var queueConnection = require('amqplib').connect('amqp://queue')
+const amqp = require('amqplib')
 
-queueConnection
-.then((conn) => conn.createChannel())
-.then(function (ch) {
-  return ch.assertQueue(queueName).then(function (ok) {
-    return ch.consume(queueName, function (msg) {
+async function consumer (queueName, connectionString) {
+  var connection = await amqp.connect(connectionString)
+  var channel = await connection.createChannel()
+  var ok = await channel.assertQueue(queueName)
+
+  if (ok) {
+    channel.consume(queueName, function (msg) {
       if (msg !== null) {
-        console.log('consume: ', msg.content.toString())
-        ch.ack(msg)
+        console.log('consumed msg: ', msg.content.toString())
+        channel.ack(msg)
       }
     })
-  })
-})
-.catch(console.warn)
+  }
+
+  console.log(' [*] Waiting for messages. To exit press CTRL+C')
+}
+
+consumer('tasks', 'amqp://queue')
