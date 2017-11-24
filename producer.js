@@ -1,6 +1,7 @@
 const path = require('path')
-const amqp = require('amqplib')
 const args = process.argv
+
+const QueueClient = require('./lib/queue_client')
 var message = null
 
 if (args.length !== 3) {
@@ -12,16 +13,16 @@ if (args.length !== 3) {
 message = args[2]
 
 async function producer (queueName, connectionString) {
-  var connection = await amqp.connect(connectionString)
-  var channel = await connection.createChannel()
-  var ok = await channel.assertQueue(queueName)
+  var q = new QueueClient(connectionString, queueName)
 
-  if (ok) {
-    await channel.sendToQueue(queueName, Buffer.from(message))
+  let err = await q.connect()
+  if (err) {
+    console.log('Connection error: ', err)
+    process.exit(1)
   }
 
-  await channel.close()
-  await connection.close()
+  await q.produce(message)
+  await q.disconnect()
 }
 
 producer('tasks', 'amqp://queue')
