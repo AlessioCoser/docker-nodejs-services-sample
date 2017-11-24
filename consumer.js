@@ -17,7 +17,7 @@ async function startConsumer (connectionString, queueName) {
 
   await q.startConsumer(consumeAction)
 
-  console.log(' [*] Waiting for messages. To exit press CTRL+C')
+  console.log('[*] Waiting for messages. To exit press CTRL+C')
 }
 
 startConsumer('amqp://queue', 'tasks')
