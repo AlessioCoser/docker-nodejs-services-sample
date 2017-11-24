@@ -1,6 +1,6 @@
 const amqp = require('amqplib')
 
-class QueueClient {
+class QueueConsumer {
   constructor (connectionString, queueName) {
     this.connectionString = connectionString
     this.queueName = queueName
@@ -36,11 +36,7 @@ class QueueClient {
     await this.connection.close()
   }
 
-  async produce (message) {
-    await this.channel.sendToQueue(this.queueName, Buffer.from(message))
-  }
-
-  async startConsumer (doForEveryItem) {
+  async start (doForEveryItem) {
     this.channel.consume(this.queueName, (msg) => {
       doForEveryItem(msg)
       this.channel.ack(msg)
@@ -54,4 +50,4 @@ function handleError (promise) {
   .catch(err => [null, err])
 }
 
-module.exports = QueueClient
+module.exports = QueueConsumer
