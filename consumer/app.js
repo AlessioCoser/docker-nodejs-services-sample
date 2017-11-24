@@ -13,17 +13,21 @@ async function startConsumer (connectionString, queueName) {
 }
 
 async function connectionLoop (consumer) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(async () => {
       console.log('... connecting ...')
       let err = await consumer.connect()
       if (err) {
-        console.log('Could not connect to Queue, retrying...')
-        await connectionLoop(consumer)
+        reject(err)
+      } else {
+        resolve(null)
       }
-      console.log('... connected ...')
-      resolve()
-    })
+    }, 1000)
+  })
+  .then(() => console.log('... connected ...'))
+  .catch(() => {
+    console.log('Could not connect to Queue, retrying...')
+    return connectionLoop(consumer)
   })
 }
 

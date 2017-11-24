@@ -5,13 +5,9 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
-  app:
-    image: node:8.9-alpine
-    entrypoint: /bin/sh
-    volumes:
-      - '.:/home/ec2user'
-    ports:
-      - '8000:3000'
-    tty: true
+  consumer:
+    build:
+      context: ./consumer
+      dockerfile: ./Dockerfile
     depends_on:
       - queue
