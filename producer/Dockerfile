@@ -5,6 +5,7 @@ WORKDIR /home/node
 COPY ./package.json ./package.json
 COPY ./lib ./lib
 COPY ./app.js ./app.js
+COPY ./views ./views
 
 RUN npm install
 

@@ -7,24 +7,20 @@ var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+let producer = new QueueProducer('amqp://queue', 'tasks')
+
 app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, './', 'index.html'))
+  res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
 app.post('/send', async function (req, res) {
-  let producer = new QueueProducer('amqp://queue', 'tasks')
-  let err = await producer.connect()
-  if (err) {
-    console.log('CONNECTION_ERROR: ', err)
-    res.redirect('/?errorCode=CONNECTION_ERROR')
-    return
-  }
   console.log(`producing "${req.body.message}"`)
-  producer.produce(req.body.message).then(() => producer.disconnect())
+  producer.produce(req.body.message)
 
   res.redirect('/')
 })
 
-app.listen(3000, function () {
+app.listen(3000, async function () {
+  await producer.waitForConnection()
   console.log('Example app listening on port 3000!')
 })

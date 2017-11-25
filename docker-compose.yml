@@ -11,3 +11,11 @@ services:
       dockerfile: ./Dockerfile
     depends_on:
       - queue
+  producer:
+    build:
+      context: ./producer
+      dockerfile: ./Dockerfile
+    ports:
+      - '8000:3000'
+    depends_on:
+      - queue

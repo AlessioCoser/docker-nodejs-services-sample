@@ -9,6 +9,25 @@ class QueueProducer {
     this.channel = null
   }
 
+  async waitForConnection () {
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        console.log('... connecting to Queue ...')
+        let err = await this.connect()
+        if (err) {
+          reject(err)
+        } else {
+          resolve(null)
+        }
+      }, 1000)
+    })
+    .then(() => console.log('... connected to Queue ...'))
+    .catch(() => {
+      console.log('Could not connect to Queue, retrying...')
+      return this.waitForConnection()
+    })
+  }
+
   async connect () {
     let err
 
