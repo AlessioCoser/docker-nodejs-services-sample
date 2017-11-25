@@ -7,6 +7,34 @@ class QueueConsumer {
 
     this.connection = null
     this.channel = null
+    this.retry = 0
+  }
+
+  async waitForConnection (maxRetry) {
+    if (maxRetry > 0) {
+      if (this.retry > maxRetry) {
+        console.log('Exceeded Max Retry. Exiting ...')
+        process.exit(1)
+      }
+      this.retry++
+    }
+
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        console.log('... connecting to Queue ...')
+        let err = await this.connect()
+        if (err) {
+          reject(err)
+        } else {
+          resolve(null)
+        }
+      }, 1000)
+    })
+    .then(() => console.log('... connected to Queue ...'))
+    .catch(() => {
+      console.log('Could not connect to Queue, retrying...')
+      return this.waitForConnection(maxRetry)
+    })
   }
 
   async connect () {
@@ -34,6 +62,10 @@ class QueueConsumer {
   async disconnect () {
     await this.channel.close()
     await this.connection.close()
+  }
+
+  async produce (message) {
+    await this.channel.sendToQueue(this.queueName, Buffer.from(message))
   }
 
   async start (doForEveryItem) {

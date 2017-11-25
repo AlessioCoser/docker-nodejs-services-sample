@@ -8,27 +8,8 @@ function consumeAction (msg) {
 
 async function startConsumer (connectionString, queueName) {
   var consumer = new QueueConsumer(connectionString, queueName)
-  await connectionLoop(consumer)
+  await consumer.waitForConnection()
   await consumer.start(consumeAction)
-}
-
-async function connectionLoop (consumer) {
-  return new Promise((resolve, reject) => {
-    setTimeout(async () => {
-      console.log('... connecting ...')
-      let err = await consumer.connect()
-      if (err) {
-        reject(err)
-      } else {
-        resolve(null)
-      }
-    }, 1000)
-  })
-  .then(() => console.log('... connected ...'))
-  .catch(() => {
-    console.log('Could not connect to Queue, retrying...')
-    return connectionLoop(consumer)
-  })
 }
 
 startConsumer('amqp://queue', 'tasks')
