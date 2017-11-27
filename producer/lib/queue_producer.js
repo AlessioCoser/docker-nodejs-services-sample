@@ -1,6 +1,6 @@
 const amqp = require('amqplib')
 
-class QueueProducer {
+class QueueClient {
   constructor (connectionString, queueName) {
     this.connectionString = connectionString
     this.queueName = queueName
@@ -61,4 +61,4 @@ class QueueProducer {
   }
 }
 
-module.exports = QueueProducer
+module.exports = QueueClient
