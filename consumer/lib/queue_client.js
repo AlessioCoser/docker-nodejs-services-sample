@@ -10,12 +10,12 @@ class QueueClient {
     this.retry = 0
   }
 
-  async waitForConnection (maxRetry) {
+  async waitForConnection (interval = 1000, maxRetry) {
     console.log('... connecting to Queue ...')
 
     if (maxRetry > 0) {
       if (this.retry > maxRetry) {
-        return new Error('Exceeded Max Retry. Exiting ...')
+        throw new Error('Exceeded Max Retry. Exiting ...')
       }
       this.retry++
     }
@@ -23,12 +23,10 @@ class QueueClient {
     try {
       await this.connect()
       console.log('... connected to Queue ...')
-      return null
     } catch (err) {
       console.log('Could not connect to Queue, retrying...')
-      await this.wait(1000)
-      let e = await this.waitForConnection(maxRetry)
-      return e
+      await this.wait(interval)
+      await this.waitForConnection(maxRetry)
     }
   }
 

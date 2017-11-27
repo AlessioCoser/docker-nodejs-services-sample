@@ -8,8 +8,9 @@ function consumeAction (msg) {
 }
 
 async function start (consumer) {
-  let err = await consumer.waitForConnection()
-  if (err) {
+  try {
+    await consumer.waitForConnection(1000)
+  } catch (err) {
     console.log(err.message)
     process.exit(1)
   }

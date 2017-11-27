@@ -20,8 +20,9 @@ app.post('/send', async (req, res) => {
 })
 
 app.listen(3000, async () => {
-  let err = await producer.waitForConnection()
-  if (err) {
+  try {
+    await producer.waitForConnection(1000)
+  } catch (err) {
     console.log(err.message)
     process.exit(1)
   }
