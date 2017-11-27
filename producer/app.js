@@ -8,18 +8,18 @@ var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'index.html'))
 })
 
-app.post('/send', async function (req, res) {
+app.post('/send', async (req, res) => {
   console.log(`producing "${req.body.message}"`)
   producer.produce(req.body.message)
 
   res.redirect('/')
 })
 
-app.listen(3000, async function () {
+app.listen(3000, async () => {
   let err = await producer.waitForConnection()
   if (err) {
     console.log(err.message)
