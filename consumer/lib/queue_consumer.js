@@ -11,50 +11,35 @@ class QueueConsumer {
   }
 
   async waitForConnection (maxRetry) {
+    console.log('... connecting to Queue ...')
+
     if (maxRetry > 0) {
       if (this.retry > maxRetry) {
-        console.log('Exceeded Max Retry. Exiting ...')
-        process.exit(1)
+        return new Error('Exceeded Max Retry. Exiting ...')
       }
       this.retry++
     }
 
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        console.log('... connecting to Queue ...')
-        let err = await this.connect()
-        if (err) {
-          reject(err)
-        } else {
-          resolve(null)
-        }
-      }, 1000)
-    })
-    .then(() => console.log('... connected to Queue ...'))
-    .catch(() => {
+    try {
+      await this.connect()
+      console.log('... connected to Queue ...')
+      return null
+    } catch (err) {
       console.log('Could not connect to Queue, retrying...')
-      return this.waitForConnection(maxRetry)
-    })
+      await this.wait(1000)
+      let e = await this.waitForConnection(maxRetry)
+      return e
+    }
+  }
+
+  async wait (time) {
+    return new Promise((resolve) => setTimeout(resolve, time))
   }
 
   async connect () {
-    let err
-
-    [this.connection, err] = await handleError(amqp.connect(this.connectionString))
-    if (err) {
-      return err
-    }
-
-    [this.channel, err] = await handleError(this.connection.createChannel())
-    if (err) {
-      return err
-    }
-
-    let ok
-    [ok, err] = await handleError(this.channel.assertQueue(this.queueName))
-    if (err) {
-      return err
-    }
+    this.connection = await amqp.connect(this.connectionString)
+    this.channel = await this.connection.createChannel()
+    await this.channel.assertQueue(this.queueName)
 
     return null
   }
@@ -74,12 +59,6 @@ class QueueConsumer {
       this.channel.ack(msg)
     })
   }
-}
-
-function handleError (promise) {
-  return promise
-  .then(data => [data, null])
-  .catch(err => [null, err])
 }
 
 module.exports = QueueConsumer
