@@ -1,5 +1,5 @@
-const QueueConsumer = require('./lib/queue_consumer')
-let consumer = new QueueConsumer('amqp://queue', 'tasks')
+const QueueClient = require('./lib/queue_client')
+let consumer = new QueueClient('amqp://queue', 'tasks')
 
 function consumeAction (msg) {
   if (msg !== null) {

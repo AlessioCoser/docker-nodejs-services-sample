@@ -1,8 +1,8 @@
 var path = require('path')
 var express = require('express')
 var bodyParser = require('body-parser')
-const QueueProducer = require('./lib/queue_producer')
-let producer = new QueueProducer('amqp://queue', 'tasks')
+const QueueClient = require('./lib/queue_client')
+let producer = new QueueClient('amqp://queue', 'tasks')
 
 var app = express()
 app.use(bodyParser.urlencoded({ extended: false }))
