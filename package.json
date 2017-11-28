@@ -4,7 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "stack:restart": "docker-compose down && docker-compose up --build"
+    "stack:start": "docker-compose up --build",
+    "stack:stop": "docker-compose down",
+    "stack:restart": "npm run stask:stop && npm run stask:start"
   },
   "author": "",
   "license": "ISC",
