@@ -1,0 +1,16 @@
+{
+  "name": "producer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "stack:restart": "docker-compose down && docker-compose up --build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2"
+  }
+}

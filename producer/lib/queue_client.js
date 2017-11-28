@@ -48,6 +48,10 @@ class QueueClient {
   }
 
   async produce (message) {
+    if (!this.channel) {
+      throw new Error('There is no connection to Queue')
+    }
+
     await this.channel.sendToQueue(this.queueName, Buffer.from(message))
   }
 

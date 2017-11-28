@@ -1,5 +1,4 @@
 const QueueClient = require('./lib/queue_client')
-let consumer = new QueueClient('amqp://queue', 'tasks')
 
 function consumeAction (msg) {
   if (msg !== null) {
@@ -7,7 +6,9 @@ function consumeAction (msg) {
   }
 }
 
-async function start (consumer) {
+async function start (connectionString, queueName) {
+  let consumer = new QueueClient('amqp://queue', 'tasks')
+
   try {
     await consumer.waitForConnection(1000)
   } catch (err) {
@@ -18,4 +19,4 @@ async function start (consumer) {
   await consumer.start(consumeAction)
 }
 
-start(consumer)
+start('amqp://queue', 'tasks')
