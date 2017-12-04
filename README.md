@@ -26,3 +26,13 @@ After the setup you can run the stack with docker compose:
 ```
 npm run stack:start
 ```
+
+## Try the stack
+
+1. With your browser go to `http://localhost:8000`
+2. Write something in the input box and press `Push to Queue`
+3. You will see in the stack logs something like:
+   ```
+    producer_1  | producing "Something on the queue"
+    consumer_1  | consumed msg:  Something on the queue
+   ```
