@@ -1,12 +1,11 @@
 {
-  "name": "producer",
-  "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "name": "docker-nodejs-services-sample",
+  "version": "0.0.1",
+  "description": "Two sample applications that run into two separate containers that share a queue",
   "scripts": {
     "stack:start": "docker-compose up --build",
     "stack:stop": "docker-compose down",
-    "stack:restart": "npm run stask:stop && npm run stask:start"
+    "stack:restart": "npm run stack:stop && npm run stack:start"
   },
   "author": "",
   "license": "ISC",
