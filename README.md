@@ -3,6 +3,7 @@ Two sample NodeJS applications deployed in a private registry that run into two 
 
 ## Requirements
 - Docker and Docker Compose
+- Npm (only to execute more friendly build scripts)
 
 ## Setup
 First you have to run a private docker registry container:
