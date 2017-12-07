@@ -6,7 +6,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm run docker:build && npm run docker:tag && npm run docker:push",
+    "docker:publish": "npm run docker:build && npm run docker:tag && npm run docker:push",
     "docker:build": "docker build -t $npm_package_name:$npm_package_version .",
     "docker:tag": "docker tag $npm_package_name:$npm_package_version $npm_package_registry/$npm_package_name:$npm_package_version",
     "docker:push": "docker push $npm_package_registry/$npm_package_name:$npm_package_version"

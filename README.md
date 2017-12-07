@@ -15,9 +15,9 @@ Then you have to create the services builds and push them into the local private
 
 ```sh
 cd ./consumer
-npm run publish
+npm run docker:publish
 cd ../producer
-npm run publish
+npm run docker:publish
 cd ..
 ```
 
