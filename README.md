@@ -11,6 +11,14 @@ First you have to run a private docker registry container:
 ```sh
 docker run -d -p 5000:5000 --restart always --name registry registry:2
 ```
+
+You can serve a simple Web-UI for docker registry with:
+(The UI uses [registry api](https://docs.docker.com/registry/spec/api/))
+
+```sh
+docker run -it -p 9000:8080 --name registry-web --link registry -e REGISTRY_URL=http://registry:5000/v2 -e REGISTRY_NAME=localhost:5000 hyper/docker-registry-web
+```
+
 Then you have to create the services builds and push them into the local private registry:
 
 ```sh
